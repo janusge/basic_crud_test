@@ -14,5 +14,5 @@ ENV PYTHONUNBUFFERED 1
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# copy project
+# copy project from host path to container path
 COPY ./app .
