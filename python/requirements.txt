@@ -1,0 +1,12 @@
+cryptography
+fastapi
+python-jose
+SQLAlchemy
+uvicorn
+psycopg[binary,pool] 
+python-jose[cryptography] 
+passlib[bcrypt] 
+argon2-cffi 
+python-multipart 
+pydantic[email]
+httpx

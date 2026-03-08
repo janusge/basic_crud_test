@@ -1,6 +1,8 @@
 networks:
   backend:
     driver: ${NETWORKS_DRIVER}
+  frontend:
+    driver: ${NETWORKS_DRIVER}
 
 volumes:
     postgres:
@@ -14,10 +16,25 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     networks:
       - backend
+      - frontend
     volumes:
-      - ../fastapi-app:/app
+      - ./python:/app
     ports:
       - 80:8000
+    depends_on:
+      - db
+
+  frontend:
+      build:
+        context: ./node
+      container_name: react-frontend
+      command: npm run dev
+      networks:
+        - frontend
+      volumes:
+        - ./node:/app
+      ports:
+        - 5173:5173
 
   db:
     image: postgres:15-alpine
