@@ -4,30 +4,32 @@ Instrucciones de Despliegue
 
    1. Clonar el repositorio:
    
-   git clone git@github.com:janusge/basic_crud_test.git
-   cd basic_crud_test
+   `git clone git@github.com:janusge/basic_crud_test.git`
+
+   `cd basic_crud_test`
    
    2. Despliegue completo con Docker Swarm:
    
-   docker swarm init
-   docker compose build 
-   docker stack deploy -c docker-compose.yml app_stack
+   `docker swarm init`
+
+   `docker compose build`
+   
+   `docker stack deploy -c docker-compose.yml app_stack`
    
    3. Despliegue independiente (Docker Compose):
    * Solo Frontend:
       
-      docker compose -f docker-compose.frontend.yml up --build
+      `docker compose -f docker-compose.frontend.yml up --build`
       
       * Solo Backend:
       
-      docker compose -f docker-compose.backend.yml up --build
+      `docker compose -f docker-compose.backend.yml up --build`
       
       
 Acceso: Una vez levantados los contenedores, ingresa a http://localhost:5173/ para registrar un usuario e iniciar sesión.
 
-¿Te gustaría que añada una sección de Variables de Entorno necesarias para que el archivo quede totalmente completo para el repositorio?
 ------------------------------
-Desarrollo Backend
+# Desarrollo Backend
 Para el desarrollo backend se utilizó la distribución de archivos básica de FastAPI, con la siguiente separación de código:
 
 * auth.py: Contiene la lógica de autorización por medio de tokens JWT, creación de tokens y verificación de los mismos.
@@ -38,7 +40,7 @@ Para el desarrollo backend se utilizó la distribución de archivos básica de F
 * schemas.py: Definiciones de esquemas Pydantic (JSON) para validación de datos de entrada y salida.
 * utils.py: Configuraciones adicionales para la generación de tokens.
 
-Estructura de Carpetas
+## Estructura de Carpetas
 
 * router/: Lógica de los endpoints dividida en:
 * users.py: Endpoints de usuarios.
@@ -49,7 +51,7 @@ Estructura de Carpetas
    * users.py: Lógica de negocio para usuarios.
 
 ------------------------------
-Endpoints Disponibles
+## Endpoints Disponibles
 
 | Método | Endpoint | Seguridad | Descripción |
 |---|---|---|---|
@@ -63,9 +65,11 @@ Endpoints Disponibles
 | GET | /external/joke | Pública | Obtiene broma externa. |
 
 ------------------------------
-Desarrollo Frontend
+# Desarrollo Frontend
+
 Se utilizó Vite para la creación del proyecto. Se agregaron los siguientes elementos:
-Componentes React
+
+### Componentes React
 
 * Joke.jsx: Visualización de bromas.
 * Login.jsx: Formulario de inicio de sesión.
