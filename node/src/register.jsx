@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from './service/auth';
 
 const Login = () => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -12,8 +12,8 @@ const Login = () => {
     const navigate = useNavigate();
 
     const validateForm = () => {
-        if (!email || !password) {
-            setError('Please enter both email and password.');
+        if (!email || !password || !name) {
+            setError('Please enter all fields.');
             return false;
         }
 
@@ -30,48 +30,80 @@ const Login = () => {
 
         setLoading(true);
 
+        const body = JSON.stringify({ name, email, password });
+
         try {
-            await login(email, password);
+            const response = await fetch('http://127.0.0.1/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: body,
+            });
 
-            navigate('/users');
+            setLoading(false);
 
+            if (response.ok) {
+                const data = await response.json();
+               
+                alert('User registered.');
+
+                setTimeout(() => {
+                    navigate('/');
+                }, 1000);
+
+            } else {
+                setError(errorData.detail || 'Service not available. Try later');
+            }
         } catch (error) {
             setLoading(false);
-            setError(error.message || 'Service unavaliable. Please try again later.');
-        } finally {
-            setLoading(false);
+            setError('An error occurred. Please try again.');
         }
     };
 
-    const goToRegister = () => {
-        navigate('/register');
+    const goToLogin = () => {
+        navigate('/login');
     };
     
     return (
         <div style={{ backgroundColor: '#eeeeee', color:"#333333" }}>
             <form onSubmit={handleSubmit}>
                 <div>
+                    <label>Name:</label>
+
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                </div>
+
+                <div>
                     <label>Email:</label>
+
                     <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
+
                 <div>
                     <label>Password:</label>
+
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
+
                 <button type="submit" disabled={loading}>
-                    {loading ? 'Logging in...' : 'Login'}
+                    {loading ? 'Logging in...' : 'Register'}
                 </button>
             </form>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <a href="#" onClick={(e) => { e.preventDefault(); goToRegister(); }} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>Don't have an account? Register here</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); goToLogin(); }} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>Already have an account? Login here</a>
         </div>
     );
 

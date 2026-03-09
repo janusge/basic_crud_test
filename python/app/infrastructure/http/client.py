@@ -3,11 +3,11 @@ import httpx
 import logging
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s: \t %(message)s -  %(asctime)s - %(name)s"
+    level=logging.INFO, format="%(levelname)s: \t %(message)s -  %(asctime)s - %(name)s"
 )
 
 logger = logging.getLogger(__name__)
+
 
 class HttpCLient:
     def __init__(self, base_url: str):
@@ -27,17 +27,28 @@ class ExternalApiClient(HttpCLient):
                 response = await client.get(self.base_url, params=params)
                 response.raise_for_status()
 
-                logger.info("status code: %s, response: %s", response.status_code, response.text)
+                logger.info(
+                    "status code: %s, response: %s", response.status_code, response.text
+                )
 
                 return response
-            
-            except httpx.HTTPStatusError as e:
-                logger.error("status code: %s, response: %s", e.response.status_code, e.response.text)
-                raise HTTPException(status_code=e.response.status_code, detail="External API error")
-            
-            except httpx.RequestError as e:
-                logger.error("status code: %s, response: %s", e.response.status_code, e.response.text)
-                raise HTTPException(status_code=500, detail="Request failed to external API")
 
-    
-    
+            except httpx.HTTPStatusError as e:
+                logger.error(
+                    "status code: %s, response: %s",
+                    e.response.status_code,
+                    e.response.text,
+                )
+                raise HTTPException(
+                    status_code=e.response.status_code, detail="External API error"
+                )
+
+            except httpx.RequestError as e:
+                logger.error(
+                    "status code: %s, response: %s",
+                    e.response.status_code,
+                    e.response.text,
+                )
+                raise HTTPException(
+                    status_code=500, detail="Request failed to external API"
+                )

@@ -9,11 +9,13 @@ class UserBase(BaseModel):
     class Config:
         orm_mode = True
 
+
 class UserOut(UserBase):
     id: UUID
 
     class Config:
         orm_mode = True
+
 
 class UserLogin(BaseModel):
     email: EmailStr

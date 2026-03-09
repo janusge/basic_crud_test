@@ -3,6 +3,7 @@ from sqlalchemy import Column, String, TIMESTAMP, text, func
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 import uuid
 
+
 class User(Base):
     __tablename__ = "users"
 

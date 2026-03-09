@@ -5,11 +5,11 @@ from ..schemas import Joke
 import logging
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s: \t %(message)s -  %(asctime)s - %(name)s"
+    level=logging.INFO, format="%(levelname)s: \t %(message)s -  %(asctime)s - %(name)s"
 )
 
 logger = logging.getLogger(__name__)
+
 
 class JokeService:
     def __init__(self, http_client: HttpCLient):
@@ -19,13 +19,15 @@ class JokeService:
         try:
             response = await self.http_client.get()
 
-            logger.info("status code: %s, response: %s", response.status_code, response.text)
+            logger.info(
+                "status code: %s, response: %s", response.status_code, response.text
+            )
 
             if response.status_code == 200:
                 joke_data = response.json()
 
                 return Joke(value=joke_data["value"])
-            
+
             else:
                 raise HTTPException(
                     status_code=status.HTTP_502_BAD_GATEWAY,
@@ -33,7 +35,7 @@ class JokeService:
                 )
         except Exception as error:
             logger.error("Error fetching joke: %s", str(error))
-            
+
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Service unavailable. Please try again later.",
