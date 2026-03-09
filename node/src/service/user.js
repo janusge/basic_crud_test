@@ -1,4 +1,4 @@
-const host = 'http://127.0.0.1';
+const host = 'http://web:8000';
 
 async function getUsers() {
     const token = localStorage.getItem('token');

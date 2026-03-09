@@ -1,44 +1,33 @@
-networks:
-  backend:
-    driver: ${NETWORKS_DRIVER}
-  frontend:
-    driver: ${NETWORKS_DRIVER}
-
-volumes:
-    postgres:
-        driver: ${VOLUMES_DRIVER}
+version: '3.8'
 
 services:
   web:
-    build:
-      context: ./python
-    container_name: fastapi-web
+    image: fastapi-web:latest
+    build: ./python
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     networks:
       - backend
       - frontend
-    volumes:
-      - ./python:/app
     ports:
       - 80:8000
-    depends_on:
-      - db
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   frontend:
-      build:
-        context: ./node
-      container_name: react-frontend
-      command: npm run dev
-      networks:
-        - frontend
-      volumes:
-        - ./node:/app
-      ports:
-        - 5173:5173
+    image: react-frontend:latest
+    build: ./node
+    command: npm run dev
+    networks:
+      - frontend
+    ports:
+      - 5173:5173
+    deploy:
+      replicas: 1
 
   db:
     image: postgres:15-alpine
-    container_name: postgres-db
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -47,5 +36,16 @@ services:
       - backend
     volumes:
       - postgres:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  backend:
+    driver: overlay
+  frontend:
+    driver: overlay
+
+volumes:
+  postgres:
+    driver: local
